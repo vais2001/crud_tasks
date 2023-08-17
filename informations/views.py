@@ -30,50 +30,57 @@ import json
 
 
 
-# deserilization
-@csrf_exempt
-def creation(request):
-  if request.method=="POST":
-    # request.headers.get('phone_number')
-    # print( request.headers.get('phone_number'))
-    # phone = request.headers.get('phone')
-    # print(phone)
-    # print("hhhhhhhhhhhhh")
-    json_data=request.body
-    print(json_data)
-    # stream=io.BytesIO(json_data)
-    python_data=json.loads(json_data)
-    # python_data=JSONParser().parse(stream) 
-    print(python_data)
-    serializer=WorkerSerializer(data=python_data)
-    if serializer.is_valid():
-        serializer.save()
-        res={'msg':'data created'}
-        json_data=JSONRenderer().render(res)
-        return HttpResponse(json_data,content_type="application/json")
-    # json_data=JSONRenderer().render(serializer.errors)
-    # return HttpResponse(json_data,content_type="application/json")
-    return JsonResponse({"msg":"This is not working"})
+# # deserilization
+# @csrf_exempt
+# def creation(request):
+#   if request.method=="POST":
+#     # request.headers.get('phone_number')
+#     # print( request.headers.get('phone_number'))
+#     # phone = request.headers.get('phone')
+#     # print(phone)
+#     # print("hhhhhhhhhhhhh")
+#     json_data=request.body
+#     print(json_data)
+#     # stream=io.BytesIO(json_data)
+#     python_data=json.loads(json_data)
+#     # python_data=JSONParser().parse(stream) 
+#     print(python_data)
+#     serializer=WorkerSerializer(data=python_data)
+#     if serializer.is_valid():
+#         serializer.save()
+#         res={'msg':'data created'}
+#         json_data=JSONRenderer().render(res)
+#         return HttpResponse(json_data,content_type="application/json")
+#     # json_data=JSONRenderer().render(serializer.errors)
+#     # return HttpResponse(json_data,content_type="application/json")
+#     return JsonResponse({"msg":"This is not working"})
 
 
 
 # UPDATION////////////////////////////
-@csrf_exempt
-def updated(request):
-    if request.method=="PUT":
-        try:
-            json_data=request.body
-            python_data=json.loads(json_data)
-            phone_number=python_data.get(phone_number)
-            worker=Worker.objects.get(phone_number=phone_number)
-            serializer=WorkerSerializer(worker,data=python_data,partial=True)
-            if serializer.is_valid():
-                serializer.save()
-                res={'msg':'data updated'}
-                json_data=JSONRenderer().render(res)
-                return HttpResponse(json_data,content_type="application/json")
-        except Exception as e:
-            return JsonResponse({'msg':str(e)})
+# @csrf_exempt
+# def updated(request):
+#     if request.method=="PUT":
+#         try:
+#             json_data=request.body
+#             python_data=json.loads(json_data)
+#             # phone_number=python_data.get('phone_number')
+#             phone_number=int(request.headers.get('phone'))
+#             # phone_number=str(request.headers.get('phone'))
+#             print(phone_number)
+#             # print(1111111111111111111111111)
+#             worker=Worker.objects.get(id=phone_number)
+#             # worker=Worker.objects.get(phone_number=phone_number)
+#             serializer=WorkerSerializer(worker,python_data,partial=True)
+#             if serializer.is_valid():
+#                 serializer.save()
+#                 res={'msg':'data updated'}
+#                 # json_data=JSONRenderer().render(res)
+#                 # return HttpResponse(json_data.data,content_type="application/json")
+#                 return JsonResponse(res)
+#             return JsonResponse({"msg":"here is break"})
+#         except Exception as e:
+#             return JsonResponse({'msg':str(e)})
 
 
 # GET/////\\\\\\
@@ -92,3 +99,16 @@ def updated(request):
 #             return JsonResponse(serializer.data,safe=False)
 #         except Exception as e:
 #             return JsonResponse({'msg':str(e)})
+
+
+def delete_data(request):
+    if request.method=='GET':
+        json_data=request.body
+        python_data=json.loads(json_data)
+        phone_number=python_data.get('phone')
+        worker=Worker.objects.get(phone_number=phone_number)
+        print(worker)
+        worker.delete()
+        return JsonResponse({"deleted":1})
+    
+    

@@ -25,7 +25,7 @@ class WorkerSerializer(serializers.Serializer):
 
 # # UPDATION
     def update(self,instance,validate_data):
-        # instance.name=validate_data.get('name',instance.name)
+        instance.name=validate_data.get('name',instance.name)
         instance.phone_number=validate_data.get('phone_number',instance.phone_number)
         instance.save()
         return instance
