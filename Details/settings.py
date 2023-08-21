@@ -26,19 +26,20 @@ SECRET_KEY = 'django-insecure-3c^%#sg%o%--=q@uec71!8p^_2t9c(#rh2g-7w!b*9pjla$$hq
 DEBUG = True
 
 ALLOWED_HOSTS = []
+APPEND_SLASH = False
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
+    'informations',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'informations',
 ]
 
 MIDDLEWARE = [
