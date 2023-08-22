@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import *
+from rest_framework.views import APIView
 from .serializers import WorkerSerializer
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
@@ -11,25 +12,20 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 # Create your views here.
 
-# get name list
-
-def get_data(request):
-    if request.method == 'GET':
+class GetWorkerData(APIView):
+    def get(self, request, *args, **kwargs):
         try:
             workers = Worker.objects.all()
-            print(workers)
             serializer = WorkerSerializer(workers, many=True)
             worker_names = [worker['name'] for worker in serializer.data]
-            print(worker_names)
             return JsonResponse(worker_names, safe=False)
         except Exception as e:
             return JsonResponse({'msg': str(e)})
 
 # if we find iexact
 
-
-def get_data(request):
-    if request.method == 'GET':
+class GetWorkerData(APIView):
+    def get(self, request, *args, **kwargs):
         try:
             search_name = 'vk'  # The name you're searching for
             worker = Worker.objects.filter(name__iexact=search_name).first()
@@ -46,28 +42,28 @@ def get_data(request):
             return JsonResponse({'msg': str(e)})
 
 # CREATION/////////////////////////////
-@csrf_exempt
-def creation(request):
-  if request.method=="POST":
-    json_data=request.body
-    print(json_data)
-    python_data=json.loads(json_data)
-    print(python_data)
-    serializer=WorkerSerializer(data=python_data)
-    if serializer.is_valid():
-        serializer.save()
-        res={'msg':'data created'}
-        json_data=JSONRenderer().render(res)
-        return HttpResponse(json_data,content_type="application/json")
-    return JsonResponse({"msg":"This is not working"})
+
+class CreateWorker(APIView):
+     def post(self, request, format=None):
+        try:
+            json_data = request.body
+            python_data = json.loads(json_data)
+            serializer = WorkerSerializer(data=python_data)
+            if serializer.is_valid():
+                serializer.save()
+                res = {'msg': 'data created'}
+                json_data = JSONRenderer().render(res)
+                return HttpResponse(json_data, content_type="application/json")
+            return JsonResponse({"msg": "This is not working"})
+        except Exception as e:
+            return JsonResponse({'msg': str(e)})
 
 
 
 # UPDATION///////////////////////////
 
-@csrf_exempt
-def update_worker(request):
-    if request.method == "PUT":
+class Update_Worker(APIView):
+     def post(self, request, format=None):
         try:
             json_data = request.body
             print(json_data,type(json_data))
@@ -88,10 +84,9 @@ def update_worker(request):
             return JsonResponse({'msg': str(e)}, status=500)
 
 # DELETE DATA
-@csrf_exempt
 
-def delete_data(request):
-    if request.method=='POST':
+class Delete_data(APIView):
+     def post(self, request, format=None):
         json_data=request.body
         python_data=json.loads(json_data)
         worker_id=python_data['worker_id']
